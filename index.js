@@ -21,14 +21,14 @@ app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: t
 app.use(passport.session());
 app.use(express.json())
 app.use(cors());
-// const currentModuleUrl = new URL(import.meta.url);
-// const currentModulePath = currentModuleUrl.pathname;
+const currentModuleUrl = new URL(import.meta.url);
+const currentModulePath = currentModuleUrl.pathname;
 
-// app.use(express.static(path.join(currentModulePath, './client/build')));
+app.use(express.static(path.join(currentModulePath, './client/build')));
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(currentModulePath, './client/build/index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(currentModulePath, './client/build/index.html'));
+});
 
 app.use(express.urlencoded({ extended: true }))
 
@@ -80,7 +80,7 @@ app.post('/messages', (req, res) => {
 
 
 
-app.get('/jobposting', (req, res) => {
+app.put('/jobposting', (req, res) => {
   Jobposting.find({ Title: 'Software Engineer' }, (err, jobpostings) => {
     if (err) {
       console.log(err);
@@ -150,7 +150,7 @@ app.post('/login', (req, res, next) => {
 });
 
 
-app.get('/user', verifyToken, async (req, res) => {
+app.put('/user', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     res.json(user);
